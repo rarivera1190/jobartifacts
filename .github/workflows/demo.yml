@@ -9,6 +9,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}   #This file is in the repo. Specifies all the dependencies and its versions.
       - name: Install dependencies
         run: npm ci
       - name: Lint code
@@ -23,6 +28,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm ci
       - name: Build website
@@ -50,6 +60,6 @@ jobs:
       - name: Output contents
         run: ls
       - name: Output filename
-        run: echo ${{needs.build.outputs.script-file}}
+        run: echo ${{needs.build.outputs.script-file}}    #Needs contains outputs of all jobs defined.Here we pull outputs from the build job.
       - name: Deploy
         run: echo "Deploying..."
